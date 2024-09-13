@@ -18,7 +18,7 @@ Please cheak ```Preprocess``` file folder.
 
 3.Use joern to generate PDG graphs, we use v1.1.172, please go to Joern's website: https://github.com/joernio/joern for more details on graph generation.
 
-  We have offered the joern script file folder.
+  We have offered the ```joern script``` file folder.
 
   We give py scripts in preprocess file folder ```joern_graph_gen.py```.You can refer to the required file.(.bin/.dot/.json)
   
