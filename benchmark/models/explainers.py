@@ -537,7 +537,7 @@ class ExplainerBase(nn.Module):
 
 
 class MyVulExplainer(ExplainerBase):
-    Args:
+    """Args:
         model (torch.nn.Module): The GNN module to explain.
         epochs (int, optional): The number of epochs to train.
             (default: :obj:`100`)
