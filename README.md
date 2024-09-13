@@ -28,7 +28,6 @@ Please cheak ```Preprocess``` file folder.
   
   .json: a dict we use to chage node id to line id.
   
-
 4. Use ```slice/main.py``` to generate ground truth and local behaviours.
   
 5.Run preprocess file folder ```train_w2v.py``` to get trained w2v model.
@@ -47,9 +46,13 @@ Please cheak ```Preprocess``` file folder.
 
 ## Run VGExplianer
 1. Check ```benchmark/data/dataset.py``` and ```dataset_gen.py``` to appoint and load the graphs you would like to explain.
+  
 2. Modify ```benchmark/args.py``` about the trained_model_path and explianer args.
+   
 3. Modify ```benchmark/models/models.py``` about the VD models.
+   
 4. Modify ```benchmark/models/explainers.py``` to appoint the dot path, slice path and out path.
+   
 5. run ```benchmark/kernel/pipeline.py```
 
 ## Evaluate
