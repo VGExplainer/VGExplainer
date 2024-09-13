@@ -1,10 +1,3 @@
-"""
-FileName: explainers.py
-Description: Explainable methods' set
-Time: 2020/8/4 8:56
-Project: GNN_benchmark
-Author: Shurui Gui
-"""
 from typing import Any, Callable, List, Tuple, Union, Dict, Sequence
 
 from math import sqrt
@@ -233,7 +226,7 @@ class ExplainerBase(nn.Module):
             important_indices.append(indice)
             number += 1
 #
-        out_path = '/home/DIG-main/dig/xgraph/GNNExplainer-master/rq2_res/15/reveal/' + name[0]
+        out_path = '/home/DIG-main/dig/xgraph/GNNExplainer-master/reveal/' + name[0]
         with open(out_path, 'w') as wp:
             #wp.write('node length: ' + str(x_len) + ' \n')
             #wp.write('important node length: ' + str(len(important_indices)) + ' \n')
@@ -544,6 +537,18 @@ class ExplainerBase(nn.Module):
 
 
 class MyVulExplainer(ExplainerBase):
+    r"""The GNN-Explainer model from the `"GNNExplainer: Generating
+    Explanations for Graph Neural Networks"
+    <https://arxiv.org/abs/1903.03894>`_ paper for identifying compact subgraph
+    structures and small subsets node features that play a crucial role in a
+    GNN’s node-predictions.
+
+    .. note::
+
+        For an example of using GNN-Explainer, see `examples/gnn_explainer.py
+        <https://github.com/rusty1s/pytorch_geometric/blob/master/examples/
+        gnn_explainer.py>`_.
+
     Args:
         model (torch.nn.Module): The GNN module to explain.
         epochs (int, optional): The number of epochs to train.
@@ -654,10 +659,15 @@ class MyVulExplainer(ExplainerBase):
         res_coalition = []
         try:
             func_preds = self.model(x, edge_index)
-        except:
+        except Exception as E_results:
+            print('model error: ',E_results)
             return
         func_score = func_preds[:, 1]
-        dot_name = '/home/VulGnnExp/com_pdg/1_vul/'+name.split('.json')[0]+'.dot'
+        _, predicted = func_preds.max(1)
+        if int(predicted) == 0:
+            print("predict = 0")
+            return
+        dot_name = '/home/VulGnnExp/com_pdg/1_vul/'+name.split('.json')[0]+'.dot' ###dot_path
         nx_pdg = nx.drawing.nx_pydot.read_dot(dot_name)
         if type(nx_pdg) != None:
             for index, node in enumerate(nx_pdg.nodes()):
@@ -694,15 +704,12 @@ class MyVulExplainer(ExplainerBase):
             func_res_coalition = []
             func_res_coalition2 = []
 
-            # rq4_path = '/home/VulGnnExp/MyVulExplainer/rq4/deepwukong/5/'+ name
-            # with open(rq4_path,'w') as rq4f:
-            #     json.dump(sorted_node_list[:sparsity_num],rq4f)
-            # continue
-
             for sorted_node in sorted_node_list[:sparsity_num]:
             # for selected_node in sorted_node[:sparsity_num]:
                 pre_coalition = []
                 suc_coalition =[]
+                # if sorted_node not in node_index:
+                #     continue
                 sel_node = node_index[sorted_node]
                 pre_coalition.append(sel_node)
                 suc_coalition.append(sel_node)
@@ -733,13 +740,13 @@ class MyVulExplainer(ExplainerBase):
                     exclude_score = exclude_preds[:, 1]
                     exp_dict[tuple(coalition_item)] = func_score-exclude_score
                 exp_dict = sorted(exp_dict.items(),key=lambda x:x[1],reverse=True)
-                exp_sel = exp_dict[0]
-                res_coalition.append(exp_sel[0])
+                exp_sel_func = exp_dict[0]
+                res_coalition.append(exp_sel_func[0])
             # else:
             #     print('no res')
             for index,exp_item in enumerate(res_coalition):
                 exp_name = name.split('.json')[0]+'###expfunc'+'.json'
-                exp_path = '/home/VulGnnExp/MyVulExplainer/results/ivdetect/5_only/'+ name.split('.json')[0]+'/'
+                exp_path = '/home/VulGnnExp/VGExplainer/xxxx/'+ name.split('.json')[0]+'/' ###glob-view output
                 if os.path.exists(exp_path):
                     exp_write_path = exp_path + exp_name
                     with open(exp_write_path,'w') as wf:
@@ -749,8 +756,11 @@ class MyVulExplainer(ExplainerBase):
                     exp_write_path = exp_path + exp_name
                     with open(exp_write_path,'w') as wf:
                         json.dump(list(exp_item),wf)
+
+
+
         res_coalition = []
-        slice_path = '/home/VulGnnExp/slice_pdg/'+name.split('.json')[0]
+        slice_path = '/home/VulGnnExp/slice_pdg/'+name.split('.json')[0] ###slice_path
         slice_lists = glob.glob(slice_path+'/*')
         if slice_lists != []:
             slice_dict = {}
@@ -825,7 +835,9 @@ class MyVulExplainer(ExplainerBase):
                         if len(sorted_node_in) > len(sorted_node_out):
                             sorted_node_list = sorted_node_in
                         else:
-                            sorted_node_list = sorted_node_out
+                            sorted_node_list = sorted_node_out   
+                     
+
                         for sorted_node in sorted_node_list[:sparsity_num]:
                         # for selected_node in sorted_node[:sparsity_num]:
                             pre_coalition = []
@@ -860,43 +872,46 @@ class MyVulExplainer(ExplainerBase):
                                 exclude_score = exclude_preds[:, 1]
                                 exp_dict[tuple(coalition_item)] = slice_score-exclude_score
                             exp_dict = sorted(exp_dict.items(),key=lambda x:x[1],reverse=True)
-                            exp_sel = exp_dict[0]
-                            res_coalition.append(exp_sel[0])
-                for index,exp_item in enumerate(res_coalition):
+                            exp_sel_slice = exp_dict[0]
+                            res_coalition.append(exp_sel_slice[0])
+
+                for index,exp_item in enumerate(res_coalition): 
                     node_mask = np.ones(x.shape[0])
                     coalition_res_sorted = []
-                    for node_item in  coalition_item:
+                    for node_item in  exp_item:
                         coalition_res_sorted.append(node_index[node_item])
                     node_mask[coalition_res_sorted] = 0.0
                     node_mask = torch.tensor(node_mask).type(torch.float32).to(x.device)
                     exclude_xi,exclude_edgeindexi=self.graph_build_zero_split(x,edge_index,node_mask)
                     exclude_preds = self.model(exclude_xi,exclude_edgeindexi)
                     exclude_score = exclude_preds[:, 1]
-                    slice_score_dict[tuple(coalition_item)] = func_score-exclude_score
+                    slice_score_dict[tuple(exp_item)] = func_score-exclude_score
                 slice_score_dict=sorted(slice_score_dict.items(),key=lambda x:x[1],reverse=True)
                     
                 exp_name = name.split('.json')[0]+'###expslice'+'.json'
-                exp_path = '/home/VulGnnExp/MyVulExplainer/results/ivdetect/5_only/'+ name.split('.json')[0]+'/'
-                if os.path.exists(exp_path):
-                    exp_write_path = exp_path + exp_name
-                    with open(exp_write_path,'w') as wf:
-                        json.dump(list(slice_score_dict[0][0]),wf)
-                else:
-                    os.mkdir(exp_path)
-                    exp_write_path = exp_path + exp_name
-                    with open(exp_write_path,'w') as wf:
-                        json.dump(list(slice_score_dict[0][0]),wf)
-                exp_only_name = name.split('.json')[0]+'###exponly'+'.json'
-                if exp_sel[1] > slice_score_dict[0][1]:
+                exp_path = '/home/VulGnnExp/VGExplainer/xxxxx/'+ name.split('.json')[0]+'/'  ###local_view output
+                for index,slice_pair in enumerate(slice_score_dict):
+                    if os.path.exists(exp_path):
+                        exp_write_path = exp_path + exp_name.split('.json')[0]+str(index)+'.json'
+                        with open(exp_write_path,'w') as wf:
+                            # json.dump(list(slice_score_dict[0][0]),wf)
+                            json.dump(list(slice_pair[0]),wf)
+                    else:
+                        os.mkdir(exp_path)
+                        exp_write_path = exp_path + exp_name
+                        with open(exp_write_path,'w') as wf:
+                            json.dump(list(slice_pair[0]),wf)
+                exp_only_name = name.split('.json')[0]+'###exponly'+'.json'    ###best explanation
+                if exp_sel_func[1] > slice_score_dict[0][1]:
                     if os.path.exists(exp_path):
                         exp_write_path = exp_path + exp_only_name
                         with open(exp_write_path,'w') as wf:
-                            json.dump(list(exp_sel[0]),wf)
+                            json.dump(list(exp_sel_func[0]),wf)
                     else:
                         os.mkdir(exp_path)
                         exp_write_path = exp_path + exp_only_name
                         with open(exp_write_path,'w') as wf:
-                            json.dump(list(exp_sel[0]),wf)
+                            json.dump(list(exp_sel_func[0]),wf)
                 else:
                     if os.path.exists(exp_path):
                         exp_write_path = exp_path + exp_only_name
@@ -908,77 +923,8 @@ class MyVulExplainer(ExplainerBase):
                         with open(exp_write_path,'w') as wf:
                             json.dump(list(slice_score_dict[0][0]),wf)
 
-                #print('#D#Predict over ...')
 
-        # else:
-            # if data_args.model_level == 'node':
-            #     node_idx = kwargs.get('node_idx')
-            #     self.node_idx = node_idx
-            #     assert node_idx is not None
-            #     _, _, _, self.hard_edge_mask = subgraph(
-            #         node_idx, self.__num_hops__, edge_index, relabel_nodes=True,
-            #         num_nodes=None, flow=self.__flow__())
-
-            # labels = tuple(i for i in range(data_args.num_classes))
-
-            # ex_labels = tuple(torch.Tensor([label]).to(data_args.device) for label in labels)
-
-            # # Calculate mask
-            # print('#D#Masks calculate...')
-            # for i, ex_label in enumerate(ex_labels):
-            #     if i == 0:
-            #         continue
-            #     self.__clear_masks__()
-            #     # self.__set_masks__(x, self_loop_edge_index)
-            #     self.__set_masks__(x, edge_index)
-            #     sorted_node_in, sorted_node_out, node_dict = self.control_sparsity(slice_edge_index, self.gnn_explainer_alg(slice_x, slice_edge_index, edge_attr, ex_label), name)
-            #     if len(sorted_node_in) > len(sorted_node_out):
-            #         sorted_node_list = sorted_node_in
-            #     else:
-            #         sorted_node_list = sorted_node_out
-            #     func_res_coalition = []
-            #     for sorted_node in sorted_node_list[:int(sparsity_num/2)]:
-            #     # for selected_node in sorted_node[:sparsity_num]:
-            #         pre_coalition = []
-            #         suc_coalition =[]
-            #         sel_node = node_index[sorted_node]
-            #         pre_coalition.append(sel_node)
-            #         suc_coalition.append(sel_node)
-            #         pre_coalition = self.rollin(nx_pdg,sel_node,pre_coalition,node_index,sparsity_num,node_dict)
-            #         suc_coalition = self.rollout(nx_pdg,sel_node,suc_coalition,node_index,sparsity_num,node_dict)
-            #         func_res_item = list(set(pre_coalition+suc_coalition))
-            #         if len(func_res_item) >= int(sparsity_num/2) and len(func_res_item) <= sparsity_num:
-            #             sorted_slice_item = sorted(func_res_item)
-            #             if sorted_slice_item not in func_res_coalition:
-            #                 func_res_coalition.append(sorted_slice_item)
-            #     exp_dict={}
-            #     if func_res_coalition!=[]:
-            #         for coalition_item in func_res_coalition:
-            #             node_mask = np.ones(x.shape[0])
-            #             coalition_item_sorted = []
-            #             for node_item in  coalition_item:
-            #                 coalition_item_sorted.append(node_index[node_item])
-            #             node_mask[coalition_item_sorted] = 0.0
-            #             node_mask = torch.tensor(node_mask).type(torch.float32).to(x.device)
-            #             exclude_xi,exclude_edgeindexi=self.graph_build_zero_split(x,edge_index,node_mask)
-            #             exclude_preds = self.model(exclude_xi,exclude_edgeindexi)
-            #             exclude_score = exclude_preds[:, 1]
-            #             exp_dict[tuple(coalition_item)] = func_score-exclude_score
-            #         exp_dict = sorted(exp_dict.items(),key=lambda x:x[1],reverse=True)
-            #         exp_sel = exp_dict[0]
-            #         res_coalition.append(exp_sel[0])
-            #     for index,exp_item in enumerate(res_coalition):
-            #         exp_name = name.split('.json')[0]+'#expfunc'+str(index)+'.json'
-            #         exp_path = '/home/VulGnnExp/MyVulExplainer/results/20_issta/'+ name.split('.json')[0]+'/'
-            #         if os.path.exists(exp_path):
-            #             exp_write_path = exp_path + exp_name
-            #             with open(exp_write_path,'w') as wf:
-            #                 json.dump(list(exp_item),wf)
-            #         else:
-            #             os.mkdir(exp_path)
-            #             exp_write_path = exp_path + exp_name
-            #             with open(exp_write_path,'w') as wf:
-            #                 json.dump(list(exp_item),wf)
+            
         print('#D#Predict over ...')
         
         return
