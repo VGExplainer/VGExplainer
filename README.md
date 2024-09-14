@@ -56,4 +56,5 @@ Please cheak ```Preprocess``` file folder.
 5. run ```benchmark/kernel/pipeline.py```
 
 ## Evaluate
+CloneGen is in [here] (https://github.com/CloneGen/CLONEGEN)
 You can write a py file to calculate the precison,iou and dice coefficient.
