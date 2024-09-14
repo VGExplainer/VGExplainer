@@ -12,7 +12,7 @@ Please check all requirements in the requirement.txt
 Please cheak ```Preprocess``` file folder.
 
 1.Run preprocess file folder  ```raw_data_preprocess.py``` to get codes from big-vul dataset and generate patch lines.
-  Or you can use our extracted codes.
+  Or you can use our extracted codes in ```Big_Vul_updated.zip```.
 
 2.Run preprocess/code_normalize file folder ```normalization.py``` to normalize the codes.
 
@@ -57,4 +57,5 @@ Please cheak ```Preprocess``` file folder.
 
 ## Evaluate
 CloneGen is in [here]( https://github.com/CloneGen/CLONEGEN) 
+
 You can write a py file to calculate the precison,iou and dice coefficient.
