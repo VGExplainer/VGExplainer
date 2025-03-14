@@ -1,8 +1,8 @@
 """
 FileName: __init__.py.py
 Description: 
-Time: 2020/7/28 12:17
-Project: GNN_benchmark
-Author: Shurui Gui
+Time: 2025/2/14 12:17
+Project: VGExplainer
+Author: Suyuan Wang
 """
 
