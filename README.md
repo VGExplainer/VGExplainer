@@ -58,4 +58,12 @@ Please cheak ```Preprocess``` file folder.
 ## Evaluate
 CloneGen is in [here]( https://github.com/CloneGen/CLONEGEN) 
 
-You can write a py file to calculate the precison,iou and dice coefficient.
+You can use ```Preprocess/evaluate_metrics.py``` to calculate the accuracy, precison, iou and dice coefficient.
+
+For LLM evaluation, You can find our scripts and motivation examples in ```LLM``` file folder for reference.
+
+We privide three LLMs for evaluation: GPT-4o, Deepseek-r1, Llama3.1.
+
+For ```GPT_talk.py```, you need to install autogen framework [here](https://github.com/microsoft/autogen) 
+
+For ```deepseek_talk.py``` and ```llama_talk.py```, you need to install Ollama  [here](https://ollama.com/) 
