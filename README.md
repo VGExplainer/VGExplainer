@@ -56,9 +56,23 @@ Please cheak ```Preprocess``` file folder.
 5. run ```benchmark/kernel/pipeline.py```
 
 ## Evaluate
-CloneGen is in [here]( https://github.com/CloneGen/CLONEGEN) 
+CloneGen is in [here]( https://github.com/CloneGen/CLONEGEN). 
+
+We also provide samples with different transformation and the description table of all 15 transformations in ```CloneGen_sample``` folder.
 
 You can use ```Preprocess/evaluate_metrics.py``` to calculate the accuracy, precison, iou and dice coefficient.
+
+Except for CVE-2017-6892(CWE-125) in the paper, we also provide vulnerability explanations for VGExplainer in 5 different scenarios to fully demonstrate its effectiveness in the real world:
+
+```other_cases/CVE-2015-8961```:CWE-416
+
+```other_cases/CVE-2017-12179```:CWE-190
+
+```other_cases/CVE-2018-15863```:CWE-476
+
+```other_cases/CVE-2019-15296```:CWE-119
+
+```other_cases/CVE-2020-13910```:CWE-787
 
 For LLM evaluation, You can find our scripts and motivation examples in ```LLM``` file folder for reference.
 
