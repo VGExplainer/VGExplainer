@@ -66,7 +66,7 @@ We also provide samples with different transformation and the description table 
 
 3.You can use ```Preprocess/evaluate_metrics.py``` to calculate the accuracy, precison, iou and dice coefficient.
 
-4.Except for CVE-2017-6892(CWE-125) in the paper, we also provide vulnerability explanations for VGExplainer in 5 different scenarios to fully demonstrate its effectiveness in the real world:
+4.Except for CVE-2017-6892 in the paper, we also provide vulnerability explanations for VGExplainer in 5 different scenarios to fully demonstrate its effectiveness in the real world:
 
 ```other_cases/CVE-2015-8961```:CWE-416
 
@@ -76,7 +76,7 @@ We also provide samples with different transformation and the description table 
 
 ```other_cases/CVE-2019-15296```:CWE-119
 
-```other_cases/CVE-2020-13910```:CWE-787
+```other_cases/CVE-2020-13910```:CWE-125
 
 5.For LLM evaluation, You can find our scripts and motivation examples in ```LLM``` file folder for reference.
 
