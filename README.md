@@ -78,6 +78,8 @@ We also provide samples with different transformation and the description table 
 
 ```other_cases/CVE-2020-13910```:CWE-125
 
+We still provide a comparison of DeepSeek-R1:32b's explanation before and after VGExplainer enhancement. We can observe that VGExplainer significantly improves the explanatory performance of DeepSeek-R1, although it is just a small parameter scale model(32b).
+
 5.For LLM evaluation, You can find our scripts and motivation examples in ```LLM``` file folder for reference.
 
 We privide three LLMs for evaluation: GPT-4o, Deepseek-r1, Llama3.1.
