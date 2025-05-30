@@ -58,7 +58,7 @@ Please cheak ```Preprocess``` file folder.
 ## Evaluate
 1.For node importance calculation, we use a MAX pooling strategy in the paper.
 
-Because we have evaluated that MAX pooling strategy has a better effectiveness than SUM and Mean pooling strategies in ```pooling_strategies/RQ2_supplement.csv```.
+Because we have evaluated that MAX pooling strategy has a better effectiveness than SUM and Mean pooling strategies in ```pooling_strategies/RQ2_supplement.csv``` as a whole.
 
 2.CloneGen is in [here]( https://github.com/CloneGen/CLONEGEN). 
 
