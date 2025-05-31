@@ -9,7 +9,7 @@ The new version of Big-Vul is in [here](https://drive.google.com/drive/folders/1
 Please check all requirements in the requirement.txt
 
 ## Preprocess
-Please cheak ```Preprocess``` file folder.
+Please check ```Preprocess``` file folder.
 
 1.Run preprocess file folder  ```raw_data_preprocess.py``` to get codes from big-vul dataset and generate patch lines.
   Or you can use our extracted codes in ```Big_Vul_updated.zip```.
